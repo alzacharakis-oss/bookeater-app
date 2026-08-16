@@ -14,6 +14,10 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'ok' });
 });
 
+import bookRoutes from './routes/bookRoutes';
+
+app.use('/api/books', bookRoutes);
+
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
