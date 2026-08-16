@@ -19,3 +19,15 @@ export const create = (book: Omit<Book, 'id'>): Book => {
     books.push(newBook);
     return newBook;
 };
+
+export const update =
+    (id: number, data: Partial<Omit< Book, 'id'>>): Book | undefined => {
+    const book = books.find((book) => book.id === id);
+
+    if (!book) {
+        return undefined;
+    }
+
+    Object.assign(book, data);
+    return book;
+}

@@ -12,3 +12,7 @@ export const getBookById = (id: number): Book | undefined => {
 export const createBook = (data: Omit<Book, 'id'>): Book => {
     return bookRepository.create(data);
 }
+
+export const updateBook = (id: number, data: Partial<Omit<Book, 'id'>>): Book | undefined => {
+    return bookRepository.update(id, data);
+};
