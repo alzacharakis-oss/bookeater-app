@@ -2,8 +2,8 @@ import { Book } from '../models/Book';
 
 let books: Book[] = [
     { id: 1, title: 'Η Δίκη', author: 'Φραντς Κάφκα' },
-    { id: 2, title: ' Η Φάρμα των Ζώων', author: 'Τζορτζ Όργουελ' },
-    { id: 3, title: ' Σιντάρτα ', author: 'Έρμαν Έσσε' },
+    { id: 2, title: 'Η Φάρμα των Ζώων', author: 'Τζορτζ Όργουελ' },
+    { id: 3, title: 'Σιντάρτα', author: 'Έρμαν Έσσε' },
 ]
 
 export const findAll = (): Book[] => {
