@@ -16,3 +16,7 @@ export const createBook = (data: Omit<Book, 'id'>): Book => {
 export const updateBook = (id: number, data: Partial<Omit<Book, 'id'>>): Book | undefined => {
     return bookRepository.update(id, data);
 };
+
+export const deleteBook = (id: number): boolean => {
+    return bookRepository.remove(id);
+}

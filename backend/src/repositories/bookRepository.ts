@@ -6,6 +6,8 @@ let books: Book[] = [
     { id: 3, title: 'Σιντάρτα', author: 'Έρμαν Έσσε' },
 ]
 
+let nextId = 4;
+
 export const findAll = (): Book[] => {
     return books;
 };
@@ -15,8 +17,9 @@ export const findById = (id: number): Book | undefined => {
 }
 
 export const create = (book: Omit<Book, 'id'>): Book => {
-    const newBook: Book = { id: books.length + 1, ...book };
+    const newBook: Book = { id: nextId, ...book };
     books.push(newBook);
+    nextId++;
     return newBook;
 };
 
@@ -30,4 +33,15 @@ export const update =
 
     Object.assign(book, data);
     return book;
+}
+
+export const remove = (id: number): boolean => {
+    const index = books.findIndex((book) => book.id === id);
+
+    if (index === -1) {
+        return false;
+    }
+
+    books.splice(index, 1);
+    return true;
 }

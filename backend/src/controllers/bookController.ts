@@ -31,3 +31,14 @@ export const updateBook = (req: Request, res: Response) => {
 
     res.json(updatedBook);
 };
+
+export const deleteBook = (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    const deletedBook = bookService.deleteBook(id);
+
+    if (!deletedBook) {
+        return res.status(404).json({ message: 'Book not found' });
+    }
+
+    res.status(204).send();
+}
