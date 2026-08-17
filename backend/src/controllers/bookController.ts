@@ -34,9 +34,9 @@ export const updateBook = (req: Request, res: Response) => {
 
 export const deleteBook = (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    const deletedBook = bookService.deleteBook(id);
+    const wasDeletedBook = bookService.deleteBook(id);
 
-    if (!deletedBook) {
+    if (!wasDeletedBook) {
         return res.status(404).json({ message: 'Book not found' });
     }
 
