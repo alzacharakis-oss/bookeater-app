@@ -16,12 +16,30 @@ export const getUserBooks = (userId: number) => {
     });
 };
 
-export const addToWishlist = (userId: number, bookId: number) => {
+export const addToWishlist =
+    (userId: number, bookId: number) => {
+    const existingEntry = userBookRepository.findByUserAndBookId(userId, bookId);
+
+    if (existingEntry) {
+        throw new Error('DUPLICATE_ENTRY');
+    }
     return userBookRepository.create(userId, bookId, 'wishlist');
 };
 
 export const updateUserBook =
     (id: number, data: { status?: ReadingStatus; rating?: number | null }) => {
+    if (data.rating !== undefined && data.rating !== null) {
+        if (data.rating < 1 || data.rating > 5) {
+            throw new Error('INVALID_RATING');
+        }
+
+        const existingEntry = userBookRepository.findById(id);
+        const finalStatus = data.status ?? existingEntry?.status;
+
+        if (finalStatus !== 'read') {
+            throw new Error('BOOK_NOT_READ');
+        }
+    }
     return userBookRepository.update(id, data);
 };
 

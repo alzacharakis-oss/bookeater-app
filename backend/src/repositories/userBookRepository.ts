@@ -11,6 +11,12 @@ export const findById = (id: number): UserBook | undefined => {
     return userBooks.find((userBook) => userBook.id === id);
 };
 
+export const findByUserAndBookId =
+    (userId: number, bookId: number): UserBook | undefined => {
+    return userBooks.find(
+        (userBook) => userBook.userId === userId && userBook.bookId === bookId);
+    };
+
 export const create = (userId: number, bookId: number, status: ReadingStatus): UserBook => {
     const newUserBook: UserBook = {
         id: nextId,
