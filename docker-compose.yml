@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: bookeater-db
+    restart: always
+    environment:
+      POSTGRES_USER: bookeater_user
+      POSTGRES_PASSWORD: bookeater_pass
+      POSTGRES_DB: bookeater
+    ports:
+      - "5432:5432"
+    volumes:
+      - bookeater-data:/var/lib/postgresql/data
+
+volumes:
+  bookeater-data:
