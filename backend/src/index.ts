@@ -21,6 +21,16 @@ app.use('/api/books', bookRoutes);
 
 app.use('/api/user-books', userBookRoutes);
 
+import { pool } from './config/database';
+
+pool.query('SELECT NOW()', (err, result) => {
+    if (err) {
+        console.error('Database connection error:', err);
+    } else {
+        console.log('Database connected:', result.rows[0]);
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
