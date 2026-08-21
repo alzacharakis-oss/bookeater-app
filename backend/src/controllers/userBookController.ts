@@ -1,17 +1,17 @@
 import { Request, Response } from 'express';
 import * as userBookService from '../services/userBookService';
 
-export const getUserBooks = (req: Request, res: Response) => {
+export const getUserBooks = async (req: Request, res: Response) => {
     const userId = Number(req.params.userId);
-    const result = userBookService.getUserBooks(userId);
+    const result = await userBookService.getUserBooks(userId);
     res.json(result);
 };
 
-export const addToWishlist = (req: Request, res: Response) => {
+export const addToWishlist = async (req: Request, res: Response) => {
     const { userId, bookId } = req.body;
 
     try {
-        const newUserBook = userBookService.addToWishlist(userId, bookId);
+        const newUserBook = await userBookService.addToWishlist(userId, bookId);
         res.status(201).json(newUserBook);
     } catch (error) {
         if (error instanceof Error && error.message === 'DUPLICATE_ENTRY') {
@@ -21,12 +21,11 @@ export const addToWishlist = (req: Request, res: Response) => {
     }
 };
 
-export const updateUserBook =
-    (req: Request, res: Response) => {
+export const updateUserBook = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 
     try {
-        const updatedUserBook = userBookService.updateUserBook(id, req.body);
+        const updatedUserBook = await userBookService.updateUserBook(id, req.body);
 
         if (!updatedUserBook) {
             return res.status(404).json({message: 'Entry Not Found'});
@@ -44,9 +43,9 @@ export const updateUserBook =
     }
 };
 
-export const removeUserBook = (req: Request, res: Response) => {
+export const removeUserBook = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    const wasDeletedUserBook = userBookService.removeUserBook(id);
+    const wasDeletedUserBook = await userBookService.removeUserBook(id);
 
     if (!wasDeletedUserBook) {
         return res.status(404).json({ message: 'Entry not found' });

@@ -1,54 +1,69 @@
+import { pool } from '../config/database'
 import { UserBook, ReadingStatus} from "../models/UserBook";
 
-let userBooks: UserBook[] = [];
-let nextId = 1;
+const SELECT_COLUMNS = `id, user_id AS "userId", book_id AS "bookId", status, rating`;
 
-export const findByUserId = (userId: number): UserBook[] => {
-    return userBooks.filter((userBook) => userBook.userId === userId);
+export const findByUserId = async (userId: number): Promise<UserBook[]> => {
+    const result = await pool.query(
+        `SELECT ${SELECT_COLUMNS} FROM user_books WHERE user_id = $1`,
+        [userId]
+    );
+    return result.rows;
 };
 
-export const findById = (id: number): UserBook | undefined => {
-    return userBooks.find((userBook) => userBook.id === id);
+export const findById = async (id: number): Promise<UserBook | undefined> => {
+    const result = await pool.query(
+        `SELECT ${SELECT_COLUMNS} FROM user_books WHERE id = $1`,
+        [id]
+    );
+    return result.rows[0];
 };
 
-export const findByUserAndBookId =
-    (userId: number, bookId: number): UserBook | undefined => {
-    return userBooks.find(
-        (userBook) => userBook.userId === userId && userBook.bookId === bookId);
-    };
-
-export const create = (userId: number, bookId: number, status: ReadingStatus): UserBook => {
-    const newUserBook: UserBook = {
-        id: nextId,
-        userId,
-        bookId,
-        status,
-        rating: null,
-    };
-    userBooks.push(newUserBook);
-    nextId++;
-    return newUserBook;
+export const findByUserIdAndBookId = async (
+    userId: number,
+    bookId: number)
+    : Promise<UserBook | undefined> => {
+    const result = await pool.query(
+        `SELECT ${SELECT_COLUMNS} FROM user_books WHERE user_id = $1 AND book_id = $2`,
+        [userId, bookId]
+    );
+    return result.rows[0];
 };
 
-export const update =
-    (id: number, data: Partial<Pick<UserBook, 'status' | 'rating'>>): UserBook | undefined => {
-    const userBook = userBooks.find((userBook) => userBook.id === id);
-
-    if (!userBook) {
-        return undefined;
-    }
-
-    Object.assign(userBook, data);
-    return userBook;
+export const create = async (
+    userId: number,
+    bookId: number,
+    status: ReadingStatus)
+    : Promise<UserBook> => {
+    const result = await pool.query(
+        `INSERT INTO user_books (user_id, book_id, status, rating)
+         VALUES ($1, $2, $3, NULL)
+         RETURNING ${SELECT_COLUMNS}`,
+         [userId, bookId, status]
+    );
+    return result.rows[0];
 };
 
-export const remove = (id: number): boolean => {
-    const index = userBooks.findIndex((userBook) => userBook.id === id);
+export const update = async (
+    id: number,
+    data: Partial<Pick<UserBook, 'status' | 'rating'>>)
+    : Promise<UserBook | undefined> => {
+    const existing = await findById(id);
+    if (!existing) return undefined;
 
-    if (index === -1) {
-        return false;
-    }
+    const updatedStatus = data.status ?? existing.status;
+    const updatedRating = data.rating !== undefined ? data.rating : existing.rating;
 
-    userBooks.splice(index, 1);
-    return true;
+    const result = await pool.query(
+        `UPDATE user_books SET status = $1, rating = $2 WHERE id = $3
+        RETURNING ${SELECT_COLUMNS}`,
+        [updatedStatus, updatedRating, id]
+    );
+    return result.rows[0];
+};
+
+export const remove = async (id: number): Promise<boolean> => {
+    const result = await pool.query(
+        `DELETE FROM user_books WHERE id = $1`, [id]);
+    return (result.rowCount ?? 0) > 0;
 };
