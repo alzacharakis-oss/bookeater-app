@@ -1,47 +1,42 @@
+import { pool } from '../config/database';
 import { Book } from '../models/Book';
 
-let books: Book[] = [
-    { id: 1, title: 'Η Δίκη', author: 'Φραντς Κάφκα' },
-    { id: 2, title: 'Η Φάρμα των Ζώων', author: 'Τζορτζ Όργουελ' },
-    { id: 3, title: 'Σιντάρτα', author: 'Έρμαν Έσσε' },
-]
-
-let nextId = 4;
-
-export const findAll = (): Book[] => {
-    return books;
+export const findAll = async (): Promise<Book[]> => {
+    const result = await pool.query('SELECT * FROM books ORDER BY id');
+    return result.rows;
 };
 
-export const findById = (id: number): Book | undefined => {
-    return books.find((book) => book.id === id);
+export const findById = async (id: number): Promise<Book | undefined> => {
+    const result = await pool.query('SELECT * FROM books WHERE id = $1', [id]);
+    return result.rows[0];
 }
 
-export const create = (book: Omit<Book, 'id'>): Book => {
-    const newBook: Book = { id: nextId, ...book };
-    books.push(newBook);
-    nextId++;
-    return newBook;
+export const create = async (book: Omit<Book, 'id'>): Promise<Book> => {
+    const result = await pool.query(
+        'INSERT INTO books (title, author) VALUES ($1, $2) RETURNING *',
+        [book.title, book.author]
+    );
+    return result.rows[0];
 };
 
-export const update =
-    (id: number, data: Partial<Omit< Book, 'id'>>): Book | undefined => {
-    const book = books.find((book) => book.id === id);
+export const update = async (
+    id: number,
+    data: Partial<Omit<Book, 'id'>>
+): Promise<Book | undefined> => {
+    const existing = await findById(id);
+    if (!existing) return undefined;
 
-    if (!book) {
-        return undefined;
-    }
+    const updatedTitle = data.title ?? existing.title;
+    const updatedAuthor = data.author ?? existing.author;
 
-    Object.assign(book, data);
-    return book;
-}
+    const result = await pool.query(
+        'UPDATE books SET title = $1, author = $2 WHERE id = $3 RETURNING *',
+        [updatedTitle, updatedAuthor, id]
+    );
+    return result.rows[0];
+};
 
-export const remove = (id: number): boolean => {
-    const index = books.findIndex((book) => book.id === id);
-
-    if (index === -1) {
-        return false;
-    }
-
-    books.splice(index, 1);
-    return true;
-}
+export const remove = async (id: number): Promise<boolean> => {
+    const result = await pool.query('DELETE FROM books WHERE id = $1', [id]);
+    return (result.rowCount ?? 0) > 0;
+};
