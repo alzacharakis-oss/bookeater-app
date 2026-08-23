@@ -2,6 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import userBookRoutes from './routes/userBookRoutes';
+import bookRoutes from './routes/bookRoutes';
+import { pool } from './config/database';
+import authRoutes from './routes/authRoutes';
 
 dotenv.config();
 
@@ -15,13 +18,11 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'ok' });
 });
 
-import bookRoutes from './routes/bookRoutes';
-
 app.use('/api/books', bookRoutes);
 
 app.use('/api/user-books', userBookRoutes);
 
-import { pool } from './config/database';
+app.use('/api/auth', authRoutes);
 
 pool.query('SELECT NOW()', (err, result) => {
     if (err) {

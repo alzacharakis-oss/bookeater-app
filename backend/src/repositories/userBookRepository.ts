@@ -3,7 +3,8 @@ import { UserBook, ReadingStatus} from "../models/UserBook";
 
 const SELECT_COLUMNS = `id, user_id AS "userId", book_id AS "bookId", status, rating`;
 
-export const findByUserId = async (userId: number): Promise<UserBook[]> => {
+export const findByUserId = async (
+    userId: number): Promise<UserBook[]> => {
     const result = await pool.query(
         `SELECT ${SELECT_COLUMNS} FROM user_books WHERE user_id = $1`,
         [userId]
@@ -11,7 +12,8 @@ export const findByUserId = async (userId: number): Promise<UserBook[]> => {
     return result.rows;
 };
 
-export const findById = async (id: number): Promise<UserBook | undefined> => {
+export const findById = async (
+    id: number): Promise<UserBook | undefined> => {
     const result = await pool.query(
         `SELECT ${SELECT_COLUMNS} FROM user_books WHERE id = $1`,
         [id]
