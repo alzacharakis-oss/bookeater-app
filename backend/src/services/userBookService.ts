@@ -32,14 +32,25 @@ export const addToWishlist = async (userId: number, bookId: number) => {
 
 export const updateUserBook = async (
     id: number,
+    requestingUserId: number,
     data: { status?: ReadingStatus; rating?: number | null }
 ) => {
+
+    const existingEntry = await userBookRepository.findById(id);
+
+    if (!existingEntry) {
+        return undefined;
+    }
+
+    if (existingEntry.userId !== requestingUserId) {
+        throw new Error('FORBIDDEN');
+    }
+
     if (data.rating !== undefined && data.rating !== null) {
         if (data.rating < 1 || data.rating > 5) {
             throw new Error('INVALID_RATING');
         }
 
-        const existingEntry = await userBookRepository.findById(id);
         const finalStatus = data.status ?? existingEntry?.status;
 
         if (finalStatus !== 'read') {
@@ -50,6 +61,20 @@ export const updateUserBook = async (
     return userBookRepository.update(id, data);
 };
 
-export const removeUserBook = async (id: number): Promise<boolean> => {
+export const removeUserBook = async (
+    id: number,
+    requestingUserId: number
+): Promise<boolean> => {
+
+    const existingEntry = await userBookRepository.findById(id);
+
+    if (!existingEntry) {
+        return false;
+    }
+
+    if (existingEntry.userId !== requestingUserId) {
+        throw new Error('FORBIDDEN');
+    }
+
     return userBookRepository.remove(id);
 };

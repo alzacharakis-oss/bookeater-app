@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import * as userBookController from '../controllers/userBookController';
+import { requireAuth } from "../middleware/auth";
 
 const router = Router();
 
-router.get('/user/:userId', userBookController.getUserBooks);
-router.post('/', userBookController.addToWishlist);
-router.patch('/:id', userBookController.updateUserBook);
-router.delete('/:id', userBookController.removeUserBook);
+router.get('/', requireAuth, userBookController.getUserBooks);
+router.post('/', requireAuth, userBookController.addToWishlist);
+router.patch('/:id', requireAuth, userBookController.updateUserBook);
+router.delete('/:id', requireAuth, userBookController.removeUserBook);
 
 export default router;

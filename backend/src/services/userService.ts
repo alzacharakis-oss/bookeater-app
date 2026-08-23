@@ -1,8 +1,9 @@
 import bcrypt from 'bcrypt';
 import * as userRepository from '../repositories/userRepository';
-import {User} from "../models/User";
+import jwt from 'jsonwebtoken';
 
 const SALT_ROUNDS = 10;
+const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export const registerUser = async (
     username: string,
@@ -26,3 +27,25 @@ export const registerUser = async (
     const { passwordHash: _, ...userWithoutPassword } = newUser;
     return userWithoutPassword;
 }
+
+export const loginUser = async (email: string, password: string) => {
+    const user = await userRepository.findByEmail(email);
+
+    if (!user) {
+        throw new Error('INVALID_CREDENTIALS');
+    }
+
+    const passwordMatches = await bcrypt.compare(password, user.passwordHash);
+
+    if (!passwordMatches) {
+        throw new Error('INVALID_CREDENTIALS');
+    }
+
+    const token = jwt.sign(
+        { userId: user.id, isAdmin: user.isAdmin },
+        JWT_SECRET,
+        { expiresIn: '2h' }
+    );
+
+    return { token };
+};
