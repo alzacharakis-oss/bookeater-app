@@ -12,8 +12,8 @@ export const createBookSchema = z.object({
     title: z.string().min(1, 'Title is required'),
     author: z
         .string()
-        .min(5, 'Author name must be at least 5 characters')
-        .regex(/^[a-zA-ZΑ-ωά-ώΆ-Ώ\s.'-]+$/, 'Author name can only contain letters, spaces, and basic punctuation'),
+        .regex(/^[a-zA-ZΑ-ωά-ώΆ-Ώ\s.'-]+$/, 'Author name can only contain letters, spaces, and basic punctuation')
+        .min(5, 'Author name must be at least 5 characters'),
 });
 
 export type CreateBookFields = z.infer<typeof createBookSchema>;
