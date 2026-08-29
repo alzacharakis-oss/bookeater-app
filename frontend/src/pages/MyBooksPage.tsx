@@ -37,7 +37,7 @@ export default function MyBooksPage() {
             }
         };
 
-        fetchUserBooks();
+        void fetchUserBooks();
     }, [isAuthenticated, navigate]);
 
     const handleMarkAsRead = async (id: number) => {
@@ -143,7 +143,7 @@ export default function MyBooksPage() {
                                 onClick={() => handleRemove(userBook.id)}
                                 size="sm"
                                 variant="outline"
-                                className="border-red-200 text-red-600 hover:bg-red-50  text-red-600"
+                                className="border-red-200 text-red-600 hover:bg-red-50"
                             >
                                 Remove
                             </Button>
