@@ -11,7 +11,7 @@ function App() {
   return (
       <AuthProvider>
         <Navbar />
-        <main>
+        <main className="max-w-4xl mx-auto p-6">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
