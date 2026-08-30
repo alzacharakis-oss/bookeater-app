@@ -63,10 +63,14 @@ export default function BookCard({ book, onWishlistAdd, onBookUpdated, onBookDel
                     <FieldLabel htmlFor={'title-${book.id}'}>Title</FieldLabel>
                     <Input id={`title-${book.id}`} {...register('title')} />
                     {errors.title && <div className="text-red-600 text-sm">
-                        {errors.title.message}
-                    </div>}
+                        {errors.title.message}</div>}
                 </Field>
-                <div>
+                <Field>
+                    <FieldLabel htmlFor={`author-${book.id}`}>Author</FieldLabel>
+                    <Input id={`author-${book.id}`} {...register('author')} />
+                    {errors.author && <div className="text-red-600 text-sm">{errors.author.message}</div>}
+                </Field>
+                <div className="flex gap-2">
                     <Button type="submit" size="sm" disabled={isSubmitting}
                             className="bg-teal-600 hover:bg-teal-700 text-white">
                         Save
