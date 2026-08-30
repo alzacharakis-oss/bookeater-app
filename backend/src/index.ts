@@ -17,8 +17,11 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok' });
+app.get('/', (req, res) => {
+    res.json({
+        message: 'Bookeater API is running',
+        docs: '/api-docs',
+    });
 });
 
 app.use('/api/books', bookRoutes);
@@ -29,13 +32,9 @@ app.use('/api/auth', authRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-pool.query('SELECT NOW()', (err, result) => {
-    if (err) {
-        console.error('Database connection error:', err);
-    } else {
-        console.log('Database connected:', result.rows[0]);
-    }
-});
+pool.query('SELECT NOW()')
+    .then(() => console.log('Database connected'))
+    .catch((err) => console.error('Database connection failed', err.message));
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
