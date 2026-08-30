@@ -8,6 +8,8 @@ import userBookRoutes from './routes/userBookRoutes';
 import bookRoutes from './routes/bookRoutes';
 import { pool } from './config/database';
 import authRoutes from './routes/authRoutes';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec} from "./config/swagger";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,6 +26,8 @@ app.use('/api/books', bookRoutes);
 app.use('/api/user-books', userBookRoutes);
 
 app.use('/api/auth', authRoutes);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 pool.query('SELECT NOW()', (err, result) => {
     if (err) {
