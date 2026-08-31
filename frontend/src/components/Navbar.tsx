@@ -25,7 +25,6 @@ export default function Navbar() {
                         Browse
                     </Link>
 
-
                  {isAuthenticated ? (
                     <>
                         <Link to="/my-books" className="text-slate-600 hover:text-teal-600 transition-colors">

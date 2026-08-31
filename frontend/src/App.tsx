@@ -6,6 +6,7 @@ import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
 import RegisterPage from '@/pages/RegisterPage';
 import MyBooksPage from '@/pages/MyBooksPage';
+import Footer from "@/components/Footer.tsx";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/my-books" element={<MyBooksPage />} />
             </Routes>
         </main>
+         <Footer />
         <Toaster />
       </AuthProvider>
   );
