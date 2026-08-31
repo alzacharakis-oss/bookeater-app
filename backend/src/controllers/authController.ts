@@ -17,9 +17,18 @@ export const register = async (req: Request, res: Response) => {
         if (error instanceof Error && error.message === 'USERNAME_ALREADY_EXISTS') {
             return res.status(409).json({ message: 'Username already in use' });
         }
+        if (error instanceof Error && error.message === 'WEAK_PASSWORD_LENGTH') {
+            return res.status(400).json({ message: 'Password must be at least 8 characters long' });
+        }
+        if (error instanceof Error && error.message === 'WEAK_PASSWORD_UPPERCASE') {
+            return res.status(400).json({ message: 'Password must contain at least one uppercase letter' });
+        }
+        if (error instanceof Error && error.message === 'WEAK_PASSWORD_NUMBER') {
+            return res.status(400).json({ message: 'Password must contain at least one number' });
+        }
         res.status(500).json({ message: 'Something went wrong' });
     }
-}
+};
 
 export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;

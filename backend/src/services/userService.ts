@@ -10,6 +10,16 @@ export const registerUser = async (
     email: string,
     password: string
 ) => {
+    if (password.length < 8) {
+        throw new Error('WEAK_PASSWORD_LENGTH');
+    }
+    if (!/[A-Z]/.test(password)) {
+        throw new Error('WEAK_PASSWORD_UPPERCASE');
+    }
+    if (!/[0-9]/.test(password)) {
+        throw new Error('WEAK_PASSWORD_NUMBER');
+    }
+
     const existingEmail = await userRepository.findByEmail(email);
 
     if (existingEmail) {
