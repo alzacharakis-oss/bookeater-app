@@ -1,6 +1,6 @@
 # Bookeater
 
-A full-stack book wishlist application. Users can browse a shared library of books, add titles to their personal wishlist, mark them as read, and rate the ones they've finished. Built as the final project for Coding Factory 10 (Athens University of Economics and Business).
+A full-stack book wishlist application. Users can browse a shared library of books, add titles to their personal wishlist, mark them as read, and rate the ones they've finished. Built as the final project for Coding Factory 9 (Athens University of Economics and Business).
 
 Search for books, add them to your wishlist, and rate them once you've finished reading.
 
@@ -189,7 +189,6 @@ These are conscious trade-offs made to keep the project's scope manageable, not 
 
 - **No duplicate-book prevention:** the same title/author can be added to the shared library more than once. This is mitigated by admin moderation rather than a hard constraint.
 - **Author field has no server-side format validation:** the frontend restricts the author field to letters (Latin and Greek), spaces, and basic punctuation, but this is not currently re-validated on the backend — a determined user bypassing the UI (e.g. via Postman) could submit a book with a numeric or symbol-only author name.
-- **Password strength is not enforced beyond a minimum length** (8 characters on registration). Rules such as requiring an uppercase letter or number were deliberately left out to keep the scope focused, with the intention of revisiting this if time permits.
 - **Database credentials are currently hardcoded** in `backend/src/config/database.ts` rather than read from environment variables (only the JWT secret uses `.env`). In a production setting, these would also be externalized.
 
 ## Testing
